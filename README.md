@@ -1,6 +1,6 @@
 <img src="/public/cover.jpg" alt="Cover image representing Nim, a personal website template" width="100%" />
 
-Nim is a free and open-source personal website template built with Next.js 15, React 19, Tailwind CSS v4, and Motion. Designed for developers, designers, and founders, it combines minimalism with delightful animated components powered by [Motion-Primitives](https://motion-primitives.com).
+Nim is a free and open-source personal website template built with Next.js 15, React 19, Tailwind CSS v4, and Motion. Designed for developers, designers, and founders, it combines minimalism with delightful animated components powered by [Motion-Primitives](https://motion-primitives.com). I have adpoted it showcase my projects and create a personal portfolio site. All credit goes to original creator as I have only made cosmetic modifications to personalize the site and add my own flavor to the mix.
 
 Live demo: [https://nim-fawn.vercel.app](https://nim-fawn.vercel.app)
 
