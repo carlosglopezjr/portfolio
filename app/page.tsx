@@ -11,11 +11,11 @@ import {
   MorphingDialogContainer,
 } from '@/components/ui/morphing-dialog'
 import Link from 'next/link'
+import React from 'react'
 import { AnimatedBackground } from '@/components/ui/animated-background'
 import {
   PROJECTS,
   WORK_EXPERIENCE,
-  BLOG_POSTS,
   EMAIL,
   SOCIAL_LINKS,
 } from './data'
@@ -123,6 +123,46 @@ function MagneticSocialLink({
   )
 }
 
+const INTRO_TEXT = `Hi, my name is Carlos, a Molecular Science and Software Engineering graduate student at UC Berkeley. I have over \
+five years of wet lab experience in biotech, working on projects spanning bioproduction and drug discovery, including industrial and \
+therapeutic applications worth millions. That experience is what drives my work now. I'm building fluency across machine learning, \
+data science, and software engineering with a focus on creating tools that make biological research faster, smarter, and more impactful. \
+Below are a few projects where I've put those skills to work.`
+
+function TypewriterText({
+  text,
+  speed = 18,
+  className = '',
+}: {
+  text: string
+  speed?: number
+  className?: string
+}) {
+  const [displayedText, setDisplayedText] = React.useState('')
+
+  React.useEffect(() => {
+    let index = 0
+
+    const interval = setInterval(() => {
+      setDisplayedText(text.slice(0, index + 1))
+      index++
+
+      if (index >= text.length) {
+        clearInterval(interval)
+      }
+    }, speed)
+
+    return () => clearInterval(interval)
+  }, [text, speed])
+
+  return (
+    <p className={className}>
+      {displayedText}
+      <span className="animate-pulse text-zinc-500">|</span>
+    </p>
+  )
+}
+
 export default function Personal() {
   return (
     <motion.main
@@ -132,119 +172,297 @@ export default function Personal() {
       animate="visible"
     >
       <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
-        <div className="flex-1">
-          <p className="text-zinc-600 dark:text-zinc-400">
-            Focused on creating intuitive and performant web experiences.
-            Bridging the gap between design and development.
-          </p>
-        </div>
-      </motion.section>
+  variants={VARIANTS_SECTION}
+  transition={TRANSITION_SECTION}
+>
+  <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
+    <motion.div
+      className="shrink-0"
+      variants={VARIANTS_SECTION}
+      transition={{ duration: 0.6, ease: 'easeOut', delay: 0.2 }}
+    >
+    </motion.div>
 
-      <motion.section
+    <div className="flex-1">
+      <motion.div
         variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
+        transition={{ duration: 0.6, ease: 'easeOut', delay: 0.4 }}
       >
-        <h3 className="mb-5 text-lg font-medium">Selected Projects</h3>
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {PROJECTS.map((project) => (
-            <div key={project.name} className="space-y-2">
-              <div className="relative rounded-2xl bg-zinc-50/40 p-1 ring-1 ring-zinc-200/50 ring-inset dark:bg-zinc-950/40 dark:ring-zinc-800/50">
-                <ProjectVideo src={project.video} />
+        <TypewriterText
+          text={INTRO_TEXT}
+          speed={5}
+          className="whitespace-pre-line text-zinc-600 dark:text-zinc-400"
+        />
+      </motion.div>
+    </div>
+  </div>
+</motion.section>
+
+<motion.section
+  variants={VARIANTS_SECTION}
+  transition={TRANSITION_SECTION}
+>
+<motion.h3
+  className="mb-5 text-lg font-medium"
+  variants={VARIANTS_SECTION}
+  transition={{ duration: 2.6, ease: 'easeOut', delay:0.4}}
+  >
+    Projects
+</motion.h3>
+
+
+  <motion.div
+  className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+  variants={{
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  }}
+  >
+    {PROJECTS.map((project) => (
+      <MorphingDialog
+        key={project.name}
+        transition={{
+          type: 'spring',
+          bounce: 0.05,
+          duration: 0.25,
+        }}
+      >
+        <MorphingDialogTrigger>
+          <motion.div
+          className="cursor-pointer space-y-2"
+          variants={VARIANTS_SECTION}
+          transition={{
+            duration: 4.45,
+            ease: 'easeOut',
+          }}
+          whileHover={{
+            y:-4,
+            scale:1.02,
+          }}
+          whileTap={{
+            scale: 0.98,
+          }}
+          >
+          <div className="relative rounded-2xl bg-zinc-50/40 p-1 ring-1 ring-zinc-200/50 ring-inset transition hover:scale-[1.01] dark:bg-zinc-950/40 dark:ring-zinc-800/50">
+
+            {project.mediaType === 'image' && project.image ? (
+              <img
+                src={project.image}
+                alt={project.name}
+                className="aspect-video w-full rounded-xl object-cover"
+              />
+            ) : project.video ? (
+              <video
+                src={project.video}
+                autoPlay
+                loop
+                muted
+                className="aspect-video w-full rounded-xl object-cover"
+              />
+            ):null}
+          </div>
+      
+
+            <div className="px-1">
+              <div className="font-base group relative inline-block font-[450] text-zinc-900 dark:text-zinc-50">
+                {project.name}
+                <span className="absolute bottom-0.5 left-0 block h-[1px] w-full max-w-0 bg-zinc-900 transition-all duration-200 group-hover:max-w-full dark:bg-zinc-50"></span>
               </div>
-              <div className="px-1">
+
+              <p className="text-base text-zinc-600 dark:text-zinc-400">
+                {project.description}
+              </p>
+            </div>
+        </motion.div>
+        </MorphingDialogTrigger>
+
+        <MorphingDialogContainer>
+          <MorphingDialogContent className="relative max-h-[85vh] w-full max-w-4xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl dark:bg-zinc-950">
+            
+            <div className="mb-6">
+              <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
+                {project.name}
+              </h2>
+
+              <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+                {project.description}
+              </p>
+            </div>
+
+            <div className="mb-8 rounded-2xl bg-zinc-100 p-1 dark:bg-zinc-900">
+              {project.mediaType === 'image' && project.image ? (
+                <img
+                  src={project.image}
+                  alt={project.name}
+                  className="aspect-video w-full rounded-xl object-cover"
+                />
+              ) : project.video ? (
+                <video
+                  src={project.video}
+                  autoPlay
+                  loop
+                  muted
+                  className="aspect-video w-full rounded-xl object-cover"
+                />
+              ) : null}
+            </div>
+
+            {project.gallery && project.gallery.length > 0 && (
+              <div className="mb-2 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                {project.gallery.map((image) => (
+                  <img
+                    key={image}
+                    src={image}
+                    alt={project.name}
+                    className="aspect-video w-full rounded-md object-cover object-right"
+                  />
+                ))}
+              </div>
+            )}
+
+            <div className="space-y-8">
+              <div>
+                <h3 className="mb-3 text-lg font-medium text-zinc-900 dark:text-zinc-50">
+                  Project Overview
+                </h3>
+
+                <p className="leading-7 text-zinc-600 dark:text-zinc-400">
+                  {project.overview}
+                </p>
+
+                {project.paper &&  (
+                  <a
+                  href={project.paper.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-block text-sm text-zinc-700 underline underline-offset-4 transition hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-zinc-50"
+                  >
+                    Reference: {project.paper.title}
+                  </a>
+                )}
+              </div>
+
+              <div>
+                <h3 className="mb-3 text-lg font-medium text-zinc-900 dark:text-zinc-50">
+                  Technologies
+                </h3>
+
+                <div className="flex flex-wrap gap-2">
+                  {project.tools.map((tools) => (
+                    <span
+                      key={tools}
+                      className="rounded-full bg-zinc-100 px-3 py-1 text-sm dark:bg-zinc-800"
+                    >
+                      {tools}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div>
                 <a
-                  className="font-base group relative inline-block font-[450] text-zinc-900 dark:text-zinc-50"
                   href={project.link}
                   target="_blank"
+                  className="inline-flex items-center rounded-xl bg-zinc-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-700 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300"
                 >
-                  {project.name}
-                  <span className="absolute bottom-0.5 left-0 block h-[1px] w-full max-w-0 bg-zinc-900 dark:bg-zinc-50 transition-all duration-200 group-hover:max-w-full"></span>
+                  View Project
                 </a>
-                <p className="text-base text-zinc-600 dark:text-zinc-400">
-                  {project.description}
-                </p>
               </div>
             </div>
-          ))}
-        </div>
-      </motion.section>
+          </MorphingDialogContent>
 
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
-        <h3 className="mb-5 text-lg font-medium">Work Experience</h3>
-        <div className="flex flex-col space-y-2">
-          {WORK_EXPERIENCE.map((job) => (
-            <a
-              className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
-              href={job.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={job.id}
-            >
-              <Spotlight
-                className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
-                size={64}
-              />
-              <div className="relative h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950">
-                <div className="relative flex w-full flex-row justify-between">
-                  <div>
-                    <h4 className="font-normal dark:text-zinc-100">
-                      {job.title}
-                    </h4>
-                    <p className="text-zinc-500 dark:text-zinc-400">
-                      {job.company}
-                    </p>
-                  </div>
-                  <p className="text-zinc-600 dark:text-zinc-400">
-                    {job.start} - {job.end}
-                  </p>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-      </motion.section>
-
-      <motion.section
-        variants={VARIANTS_SECTION}
-        transition={TRANSITION_SECTION}
-      >
-        <h3 className="mb-3 text-lg font-medium">Blog</h3>
-        <div className="flex flex-col space-y-0">
-          <AnimatedBackground
-            enableHover
-            className="h-full w-full rounded-lg bg-zinc-100 dark:bg-zinc-900/80"
-            transition={{
-              type: 'spring',
-              bounce: 0,
-              duration: 0.2,
+          <MorphingDialogClose
+            className="fixed top-6 right-6 rounded-full bg-white p-2 shadow-lg dark:bg-zinc-900"
+            variants={{
+              initial: { opacity: 0 },
+              animate: {
+                opacity: 1,
+                transition: { delay: 0.2 },
+              },
+              exit: {
+                opacity: 0,
+              },
             }}
           >
-            {BLOG_POSTS.map((post) => (
-              <Link
-                key={post.uid}
-                className="-mx-3 rounded-xl px-3 py-3"
-                href={post.link}
-                data-id={post.uid}
-              >
-                <div className="flex flex-col space-y-1">
-                  <h4 className="font-normal dark:text-zinc-100">
-                    {post.title}
-                  </h4>
-                  <p className="text-zinc-500 dark:text-zinc-400">
-                    {post.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </AnimatedBackground>
+            <XIcon className="h-5 w-5 text-zinc-500" />
+          </MorphingDialogClose>
+        </MorphingDialogContainer>
+      </MorphingDialog>
+    ))}
+  </motion.div>
+</motion.section>
+
+<motion.section
+  variants={VARIANTS_SECTION}
+  transition={TRANSITION_SECTION}
+>
+  <motion.h3
+    className="mb-5 text-lg font-medium"
+    variants={VARIANTS_SECTION}
+    transition={{ duration: 4.6, ease: 'easeOut', delay: 0.2 }}
+  >
+    Work Experience
+  </motion.h3>
+
+  <motion.div
+    className="flex flex-col space-y-2"
+    variants={{
+      hidden: {},
+      visible: {
+        transition: {
+          staggerChildren: 0.12,
+        },
+      },
+    }}
+  >
+    {WORK_EXPERIENCE.map((job) => (
+      <motion.a
+        key={job.id}
+        className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
+        href={job.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        variants={VARIANTS_SECTION}
+        transition={{ duration: 4.60, ease: 'easeOut' }}
+        whileHover={{
+          y: -3,
+          scale: 1.01,
+        }}
+        whileTap={{
+          scale: 0.99,
+        }}
+      >
+        <Spotlight
+          className="from-zinc-900 via-zinc-800 to-zinc-700 blur-2xl dark:from-zinc-100 dark:via-zinc-200 dark:to-zinc-50"
+          size={64}
+        />
+
+        <div className="relative h-full w-full rounded-[15px] bg-white p-4 dark:bg-zinc-950">
+          <div className="relative flex w-full flex-row justify-between">
+            <div>
+              <h4 className="font-normal dark:text-zinc-100">
+                {job.title}
+              </h4>
+
+              <p className="text-zinc-500 dark:text-zinc-400">
+                {job.company}
+              </p>
+            </div>
+
+            <p className="text-zinc-600 dark:text-zinc-400">
+              {job.start} - {job.end}
+            </p>
+          </div>
         </div>
-      </motion.section>
+      </motion.a>
+    ))}
+  </motion.div>
+</motion.section>
+
 
       <motion.section
         variants={VARIANTS_SECTION}

@@ -1,0 +1,6 @@
+allowBuilds:
+  '@tsparticles/engine': true
+  react-tsparticles: false
+  sharp: true
+  tsparticles-engine: false
+  unrs-resolver: true
