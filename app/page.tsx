@@ -423,7 +423,6 @@ export default function Personal() {
       <motion.a
         key={job.id}
         className="relative overflow-hidden rounded-2xl bg-zinc-300/30 p-[1px] dark:bg-zinc-600/30"
-        href={job.link}
         target="_blank"
         rel="noopener noreferrer"
         variants={VARIANTS_SECTION}
